@@ -49,13 +49,17 @@ class Terrain:
         clients = []
         for i, l in enumerate(self.cases):
             for j, c in enumerate(l):
-                if c == Case.CLIENT:
+            	if c == Case.CLIENT:
                     clients.append((i, j))
         return clients
 
     def get_entree(self) -> tuple[int, int]:
-        # TODO
-        return None
+        for i, l in enumerate(self.cases):
+            for j, c in enumerate(l):
+                if c == Case.ENTREE:
+                    return (i, j)
+        return (-1, -1)
+
 
     def afficher(self):
         for l in self.cases:
