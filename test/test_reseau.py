@@ -7,17 +7,50 @@ from Terrain import Terrain, Case
 
 class TestReseau(unittest.TestCase):
 
-    def test_definition_entree(self):
-        # TODO
-        self.fail()
+    def test_definition_entree(self): # implémenttion nouvelle
+        r = Reseau()
 
-    def test_ajout_noeud(self):
+        r.ajouter_noeud(0, (0, 0))
+        r.ajouter_noeud(1, (0, 1))
+
+        r.definir_entree(0)
+        self.assertEqual(r.noeud_entree, 0)
+
+        r.definir_entree(5)
+        self.assertEqual(r.noeud_entree, -1)
         # TODO
-        self.fail()
+        #self.fail()
+
+    def test_ajout_noeud(self): # implémentation
+        r = Reseau()
+
+        r.ajouter_noeud(0, (2, 3))
+        self.assertEqual(r.noeuds[0], (2, 3))
+
+        r.ajouter_noeud(-1, (1, 1)) # Refus d'un identifiant négatif
+        self.assertNotIn(-1, r.noeuds)
+
+        r.ajouter_noeud(0, (4, 5))  # Refus d'un identifiant déjà utilisé
+        self.assertEqual(r.noeuds[0], (2, 3))
+        # TODO
+        #self.fail()
 
     def test_ajout_arc(self):
+       r = Reseau()
+
+       r.ajouter_noeud(0, (0, 0)) # Création de deux nœuds voisins
+       r.ajouter_noeud(1, (0, 1))
+
+       r.ajouter_arc(0, 1)  # Ajout d'un arc valide
+       self.assertIn((0, 1), r.arcs)
+
+       r.ajouter_arc(0, 1)  # Vérification de l'absence de doublon
+       self.assertEqual(len(r.arcs), 1)
+
+       r.ajouter_arc(0, 5) # Refus d'un arc vers un nœud inexistant
+       self.assertEqual(len(r.arcs), 1)
         # TODO
-        self.fail()
+        #self.fail()
 
     def test_validation_correcte(self):
         r = Reseau()

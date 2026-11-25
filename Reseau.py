@@ -17,7 +17,7 @@ class Reseau:
             self.noeud_entree = -1
 
     def ajouter_noeud(self, n: int, coords: tuple[int, int]):
-        if n >= 0:
+        if n >= 0 and n not in self.noeuds: # ajout de la condition n'exite pas déjà
             self.noeuds[n] = coords
 
     def ajouter_arc(self, n1: int, n2: int) -> None:
@@ -34,19 +34,56 @@ class Reseau:
         self.strat = strat
 
     def valider_reseau(self) -> bool:
-        # TODO
-        return False
+        if self.noeud_entree not in self.noeuds :
+            return False
+        visites = set()
+        a_visiter = [self.noeud_entree]
+        while a_visiter:
+            n = a_visiter.pop()
 
-    def valider_distribution(self, t: Terrain) -> bool:
+            if n not in visites:
+                visites.add(n)
+
+                for n1, n2 in self.arcs:
+                    if n1 == n and n2 not in visites:
+                        a_visiter.append(n2)
+
+                    elif n2 == n and n1 not in visites:
+                         a_visiter.append(n1)
+
+        return len(visites) == len(self.noeuds)
+
         # TODO
-        return False
+        #return False
+
+    def valider_distribution(self, t: Terrain) -> bool: # implémentaion 2
+        if not self.valider_reseau(): # TODO # Verification de la connectivité des noeuds à l'entree
+            return False
+
+        if self.noeuds[self.noeud_entree] != t.get_entree():#vérifie que le nœud d'entrée correspond
+            return False
+
+        for client in t.get_clients():
+            if client not in self.noeuds.values():
+                return False
+
+        return True  # fin
+    
 
     def configurer(self, t: Terrain):
         self.noeud_entree, self.noeuds, self.arcs  = self.strat.configurer(t)
 
-    def afficher(self) -> None:
+    def afficher(self) -> None: # Implémenté par lokon
+        print("Configuration du réseau électrique")
+
+        print("Nœud d'entrée :", self.noeud_entree) #affiche l'identifiant de l'entrée électrique.
+
+        print("Liste des nœuds :")
+        for n, coords in self.noeuds.items(): #parcourrir les identifiants
+            print("Nœud", n, ":", coords) # affiche les noeuds
+            print("Liste des arcs :") #affiche les arcs
         # TODO
-        pass
+       # pass
 
     def afficher_avec_terrain(self, t: Terrain) -> None:
         for ligne, l in enumerate(t.cases):
